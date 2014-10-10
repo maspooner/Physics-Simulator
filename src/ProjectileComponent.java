@@ -155,4 +155,12 @@ public class ProjectileComponent extends JComponent{
 		return label;
 	}
 	//TODO this (just plot points), use range equation, get final distance, divide by number of points, and then add interval from that to initial, then repeat for number of points. 
+	/**
+	 * @return returns a double
+	 * TODO compensate for displacement on computer graph
+	 */
+	private double calculateRange(){
+		double range = ((Math.pow(VELOCITY_INITIAL, 2))*(Math.sin(Math.toRadians(2*LAUNCH_ANGLE))))/Y_ACCELERATION; //dat range equation
+		return range; //return it!
+	}
 }
