@@ -18,12 +18,15 @@ public class ProjectileComponent extends JComponent{
 	
 	//Graph Constants
 	private static final int DEFAULT_SCALE = 2; //m
-	private static final int DEFAULT_OFFSET = 15; //px
+	private static final int DEFAULT_OFFSET = 25; //px
 	private static final int TICK_LENGTH = 5; //px
-	private static final int TICK_SPACING = 10; //px
+	private static final int TICK_SPACING = 15; //px
 	private static final int ARROW_LENGTH = 15; //px
 	private static final int ARROW_WIDTH = 8; //px
 	private static final int NUM_POINTS=100;
+	private static final int X_LABEL_DISTANCE = 5; //px
+	private static final int Y_LABEL_DISTANCE = 15; //px
+	private static final int LABEL_PLACES = 3;
 	
 	//Members
 	private int xScale;
@@ -73,9 +76,18 @@ public class ProjectileComponent extends JComponent{
 		//draw the y arrow
 		drawArrow(g, true);
 		//draw the x labels
-		//TODO
+		for(int x = xOffset; x <= P_WIDTH; x += TICK_SPACING){
+			int scaleMark = (x - xOffset) / TICK_SPACING;
+			String label = getLabel(scaleMark * xScale);
+			g.drawString(label, x, HEIGHT - yOffset + X_LABEL_DISTANCE);
+		}
 		//draw the y labels
 		//TODO
+		for(int y = P_HEIGHT; y >= ARROW_LENGTH; y -= TICK_SPACING){
+			int scaleMark = (P_HEIGHT - y) / TICK_SPACING;
+			String label = getLabel(scaleMark * yScale);
+			g.drawString(label, xOffset - Y_LABEL_DISTANCE, y);
+		}
 	}
 	private void drawArrow(Graphics g, boolean isUp){
 		int[] xPoints = new int[3];
@@ -112,5 +124,14 @@ public class ProjectileComponent extends JComponent{
 	private double calculateYPosition(double time){
 		//TODO
 		return 0.0d;
+	}
+	private String getLabel(int scale){
+		//TODO
+		//adds spaces to line everything up
+		String label = Integer.toString(scale);
+		while(label.length() < LABEL_PLACES){
+			label = " " + label;
+		}
+		return label;
 	}
 }

@@ -11,6 +11,7 @@ public class ProjectileRunner {
 	 * draw the arrowheads
 	 * draw the actual graph
 	 * write the physics equations into methods
+	 * labels overlap, fix this
 	 */
 	public static void main(String[] args){
 		JFrame frame = new JFrame("Projectile Physics");
