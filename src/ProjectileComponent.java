@@ -12,7 +12,7 @@ public class ProjectileComponent extends JComponent{
 	private static final double X_POSITION_INITIAL = 0; //m
 	private static final double Y_POSITION_INITIAL = 0; //m
 	private static final double VELOCITY_INITIAL = 5.0; //m/s
-	private static final double LAUNCH_ANGLE = 45; //degrees
+	private static final double LAUNCH_ANGLE = 45.0; //degrees
 	private static final double X_ACCELERATION = 0.0; //m/s^2
 	private static final double Y_ACCELERATION = 9.81;//m/s^2
 	
@@ -103,8 +103,15 @@ public class ProjectileComponent extends JComponent{
 			xPoints[2] = xOffset;
 			yPoints[2] = 0;
 		}
-		else{
-			//TODO
+		else{ //work in progress FOR DEREK ONLY
+			/*xPoints[0] = getWidth();
+			yPoints[0] = getHeight() - 20;
+			
+			xPoints[1] = getWidth() - xOffset;
+			yPoints[1] = getHeight() - yOffset/2;
+			
+			xPoints[2] = getWidth() - xOffset;
+			yPoints[2] = getHeight() + yOffset/2;*/
 		}
 		//create the triangle
 		Polygon p = new Polygon(xPoints, yPoints, 3);
@@ -113,6 +120,7 @@ public class ProjectileComponent extends JComponent{
 	private void plot(Graphics g){
 		//TODO
 		//calculate the time for the projectile to hit the ground
+		int timeForLanding; //TODO
 		//divide that by the NUM_POINTS to get the time between each point
 		//Iterate through each time and find the x and y position at it
 		//Draw and arc or line through multiple points to draw the graph
@@ -133,5 +141,12 @@ public class ProjectileComponent extends JComponent{
 			label = " " + label;
 		}
 		return label;
+	}
+	//to do this (just plot points), use range equation, get final distance, divide by number of points, and then add interval from that to initial, then repeat for number of points. 
+	private double calculateXVelocity(){
+		return VELOCITY_INITIAL * Math.cos(Math.toRadians(LAUNCH_ANGLE));
+	}
+	private double calculateYVelocity(){
+		return VELOCITY_INITIAL * Math.sin(Math.toRadians(LAUNCH_ANGLE));
 	}
 }
