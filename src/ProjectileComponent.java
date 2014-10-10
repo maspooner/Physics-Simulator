@@ -12,7 +12,7 @@ public class ProjectileComponent extends JComponent{
 	private static final double X_POSITION_INITIAL = 0; //m
 	private static final double Y_POSITION_INITIAL = 0; //m
 	private static final double VELOCITY_INITIAL = 5.0; //m/s
-	private static final double LAUNCH_ANGLE = 45; //degrees
+	private static final double LAUNCH_ANGLE = 45.0; //degrees
 	private static final double X_ACCELERATION = 0.0; //m/s^2
 	private static final double Y_ACCELERATION = 9.81;//m/s^2
 	
@@ -108,6 +108,7 @@ public class ProjectileComponent extends JComponent{
 	private void plot(Graphics g){
 		//TODO
 		//calculate the time for the projectile to hit the ground
+		int timeForLanding; //TODO
 		//divide that by the NUM_POINTS to get the time between each point
 		//Iterate through each time and find the x and y position at it
 		//Draw and arc or line through multiple points to draw the graph
@@ -119,5 +120,11 @@ public class ProjectileComponent extends JComponent{
 	private double calculateYPosition(double time){
 		//TODO
 		return 0.0d;
+	}
+	private double calculateXVelocity(){
+		return VELOCITY_INITIAL * Math.cos(Math.toRadians(LAUNCH_ANGLE));
+	}
+	private double calculateYVelocity(){
+		return VELOCITY_INITIAL * Math.sin(Math.toRadians(LAUNCH_ANGLE));
 	}
 }
