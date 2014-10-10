@@ -121,6 +121,7 @@ public class ProjectileComponent extends JComponent{
 		//TODO
 		return 0.0d;
 	}
+	//to do this (just plot points), use range equation, get final distance, divide by number of points, and then add interval from that to initial, then repeat for number of points. 
 	private double calculateXVelocity(){
 		return VELOCITY_INITIAL * Math.cos(Math.toRadians(LAUNCH_ANGLE));
 	}
