@@ -150,4 +150,12 @@ public class ProjectileComponent extends JComponent{
 	private double calculateYVelocity(){
 		return VELOCITY_INITIAL * Math.sin(Math.toRadians(LAUNCH_ANGLE));
 	}
+	/**
+	 * @return returns a double
+	 * TODO compensate for displacement on computer graph
+	 */
+	private double calculateRange(){
+		double range = ((Math.pow(VELOCITY_INITIAL, 2))*(Math.sin(Math.toRadians(2*LAUNCH_ANGLE))))/Y_ACCELERATION; //dat range equation
+		return range; //return it!
+	}
 }
