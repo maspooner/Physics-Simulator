@@ -24,6 +24,11 @@ public class ProjectileComponent extends JComponent{
 	private static final Font GRAPH_FONT = new Font("monospaced", Font.PLAIN, 11);
 	
 	//Members
+	//Point arrays
+	private double[] xCoord = new double[NUM_POINTS];
+	private double[] yCoord = new double[NUM_POINTS];
+	
+	//Physics
 	private double xScale;
 	private double yScale;
 	private int xOffset;
@@ -34,6 +39,9 @@ public class ProjectileComponent extends JComponent{
 	private double yAcceleration;
 	private double initialVelocity;
 	private double angle;
+	
+	private double xVelocity;
+	private double yVelocity;
 	
 	//Constructors
 	protected ProjectileComponent(){
@@ -51,6 +59,8 @@ public class ProjectileComponent extends JComponent{
 		this.yAcceleration = 0.0;
 		this.initialVelocity = 0.0;
 		this.angle = 0.0;
+		this.xVelocity = 0.0;
+		this.yVelocity = 0.0;
 	}
 	protected ProjectileComponent(double xScale, double yScale){
 		this(xScale, yScale, DEFAULT_OFFSET, DEFAULT_OFFSET);
@@ -124,6 +134,9 @@ public class ProjectileComponent extends JComponent{
 		g.fillPolygon(p);
 	}
 	private void plot(Graphics g){
+		long startTime = System.currentTimeMillis();
+		double projectileTime = calculateTime();
+		double unitTime = calculatePointTime();
 		//TODO
 		//Draw all the points
 		//Draw and arc or line through multiple points to draw the graph
@@ -154,10 +167,49 @@ public class ProjectileComponent extends JComponent{
 	/**
 	 * @return returns a double
 	 * TODO compensate for displacement on computer graph
+	 * Matt - instead of compensating, since we will need the raw value for the time calculation, I added a parameter, so that it returns either a scaled range or the pure range. 
 	 */
-	private double calculateRange(){
-		double range = ((Math.pow(initialVelocity, 2))*(Math.sin(Math.toRadians(2*angle))))/yAcceleration; //dat range equation
-		return range; //return it!
+	private double calculateRange(boolean isScaled){
+		double rawRange = ((Math.pow(initialVelocity, 2))*(Math.sin(Math.toRadians(2*angle))))/yAcceleration; //dat range equation
+		double manipRange = 0; //add compensate code here
+		if(isScaled){
+			return rawRange;
+		}
+		else{ //TODO create manipRange for graph
+			return manipRange;
+		}
+	}
+	/**
+	 * @param None!
+	 * @return The time at which a projectile is in the air. (untested)
+	 */
+	private double calculateTime(){ 
+//		double time = ((-1*xVelocity) + Math.sqrt((Math.pow(xVelocity, 2)) + ((-4)*(.5*xAcceleration)*(-1 * calculateRange(false)))))/xAcceleration; //This should get the time, MATT CHECK MY MATH PLS (Them parenthesis!!!!)
+		//I don't know how you got your equation, but it did not work. The one bellow seems to work.
+		double time = (-Math.sqrt(-yPosition * 2 * yAcceleration + Math.pow(yVelocity, 2)) - yVelocity) / yAcceleration;
+		return time;
+	}
+	private double calculatePointTime(){
+		double unitTime = calculateTime()/NUM_POINTS;
+		return unitTime;
+	}
+	private double calcPointX(double unitTime){
+		double pointX = xPosition + (xVelocity)*(unitTime) + (.5)*(xAcceleration)*(Math.pow(unitTime, 2));
+		return pointX;
+	}
+	private double calcPointY(double unitTime){
+		double pointY = yPosition + (yVelocity)*(unitTime) + (.5)*(yAcceleration)*(Math.pow(unitTime, 2));
+		return pointY;
+	}
+	private void calcPoints(double unitTime){
+		double jumpTime = unitTime;
+		for(int i = 0; i <= NUM_POINTS; i++){
+			double thisXCoord = calcPointX(jumpTime);
+			double thisYCoord = calcPointY(jumpTime);
+			xCoord[i] = thisXCoord;
+			yCoord[i] = thisYCoord;
+			jumpTime = jumpTime + jumpTime;
+		}
 	}
 	//protected interface TODO write setters
 	@Override
