@@ -9,17 +9,6 @@ import javax.swing.JComponent;
  */
 @SuppressWarnings("serial")
 public class ProjectileComponent extends JComponent{
-	//Physics Constants
-	private static final double X_POSITION_INITIAL = 0; //m
-	private static final double Y_POSITION_INITIAL = 0; //m
-	private static final double VELOCITY_INITIAL = 10.0; //m/s
-	private static final double LAUNCH_ANGLE = 50.0; //degrees
-	private static final double X_ACCELERATION = -0.6; //m/s^2
-	private static final double Y_ACCELERATION = -2.81;//m/s^2
-	
-	private static final double X_VELOCITY_INITIAL = VELOCITY_INITIAL * Math.cos(Math.toRadians(LAUNCH_ANGLE));; //m/s
-	private static final double Y_VELOCITY_INITIAL = VELOCITY_INITIAL * Math.sin(Math.toRadians(LAUNCH_ANGLE)); //m/s
-	
 	//Graph Constants
 	private static final int DEFAULT_SCALE = 2; //m
 	private static final int DEFAULT_OFFSET = 25; //px
@@ -39,6 +28,12 @@ public class ProjectileComponent extends JComponent{
 	private double yScale;
 	private int xOffset;
 	private int yOffset;
+	private double xPosition;
+	private double yPosition;
+	private double xAcceleration;
+	private double yAcceleration;
+	private double initialVelocity;
+	private double angle;
 	
 	//Constructors
 	protected ProjectileComponent(){
@@ -49,6 +44,13 @@ public class ProjectileComponent extends JComponent{
 		this.yScale = yScale;
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
+		//set all physics fields to 0 to start (will not graph until button on input panel is pressed)
+		this.xPosition = 0.0;
+		this.yPosition = 0.0;
+		this.xAcceleration = 0.0;
+		this.yAcceleration = 0.0;
+		this.initialVelocity = 0.0;
+		this.angle = 0.0;
 	}
 	protected ProjectileComponent(double xScale, double yScale){
 		this(xScale, yScale, DEFAULT_OFFSET, DEFAULT_OFFSET);
@@ -57,12 +59,7 @@ public class ProjectileComponent extends JComponent{
 		this(DEFAULT_SCALE, DEFAULT_SCALE, xOffset, yOffset);
 	}
 	//Methods
-	@Override
-	protected void paintComponent(Graphics g) {
-		g.setFont(GRAPH_FONT);
-		drawAxis(g);
-		plot(g);
-	}
+	//private interface
 	private void drawAxis(Graphics g){
 		final int WIDTH = getWidth();
 		final int HEIGHT = getHeight();
@@ -128,21 +125,13 @@ public class ProjectileComponent extends JComponent{
 	}
 	private void plot(Graphics g){
 		//TODO
-		//TODO only do calculation once, not everytime paint is called
-		//calculate the time for the projectile to hit the ground
-		
-		//divide that by the NUM_POINTS to get the time between each point
-		
-		//Iterate through each time and find the x and y position at it
-		
+		//Draw all the points
 		//Draw and arc or line through multiple points to draw the graph
-		//TODO
 	}
-	
 	private String getLabel(double scale){
-		//adds spaces to line everything up and reformats the scale
+		//reformat the scale to fix rounding errors
 		String label = String.format("%." + MAX_SCALE_DECIMAL_PLACES + "f", scale);
-		//while it has insignificant 0s or the . and has a . and is not a single 0
+		//while (it has insignificant 0s OR the .) AND has a . AND is not a single 0
 		while((label.endsWith("0") || label.endsWith(".")) && label.contains(".") && label.length() > 1){
 			//chop off last digit
 			label = label.substring(0, label.length()-1);
@@ -154,13 +143,31 @@ public class ProjectileComponent extends JComponent{
 		}
 		return label;
 	}
+	private void calculatePoints() {
+		//TODO only do calculation once, not everytime paint is called
+		//calculate the time for the projectile to hit the ground
+		//divide that by the NUM_POINTS to get the time between each point
+		//Iterate through each time and find the x and y position at it
+		//set it to an instance variable to be graphed later
+	}
 	//TODO this (just plot points), use range equation, get final distance, divide by number of points, and then add interval from that to initial, then repeat for number of points. 
 	/**
 	 * @return returns a double
 	 * TODO compensate for displacement on computer graph
 	 */
 	private double calculateRange(){
-		double range = ((Math.pow(VELOCITY_INITIAL, 2))*(Math.sin(Math.toRadians(2*LAUNCH_ANGLE))))/Y_ACCELERATION; //dat range equation
+		double range = ((Math.pow(initialVelocity, 2))*(Math.sin(Math.toRadians(2*angle))))/yAcceleration; //dat range equation
 		return range; //return it!
+	}
+	//protected interface TODO write setters
+	@Override
+	protected void paintComponent(Graphics g) {
+		g.setFont(GRAPH_FONT);
+		drawAxis(g);
+		plot(g);
+	}
+	protected void replot(){
+		calculatePoints();
+		repaint();
 	}
 }
