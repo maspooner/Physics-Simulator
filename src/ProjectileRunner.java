@@ -44,10 +44,8 @@ public class ProjectileRunner {
 				synchronized(lock){
 					lock.wait();
 				}
-				System.out.println("NOTIFIED!");
 				//set and graph the new parameters
 				try{
-					//TODO use setters in projectilecomponent with getters in projectileinputpanel
 					projectileGraph.setXPosition(inputPanel.getXPostition());
 					projectileGraph.setYPosition(inputPanel.getYPosition());
 					projectileGraph.setXAccel(inputPanel.getXAccel());

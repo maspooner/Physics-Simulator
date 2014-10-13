@@ -138,16 +138,29 @@ public class ProjectileComponent extends JComponent{
 		double projectileTime = calculateTime();
 		double unitTime = calculatePointTime();
 		long startTime = System.currentTimeMillis();
-		
+		//Draw all the points
 		for(int i = 0; i < NUM_POINTS; i++){
-			int pointX = (int) (xCoord[i] + xOffset);
-			int pointY = (int) (yOffset - yCoord[i]);
+			int pointX = getScaledX(i);
+			int pointY = getScaledY(i);
 			g.drawRect(pointX, pointY, 1, 1);
 		}
-		
 		//TODO
-		//Draw all the points
-		//Draw and arc or line through multiple points to draw the graph
+		//Draw line through multiple points to draw the graph
+		for(int i = 0; i < NUM_POINTS - 1; i++){
+			int x1 = getScaledX(i);
+			int y1 = getScaledY(i);
+			int x2 = getScaledX(i + 1);
+			int y2 = getScaledY(i + 1);
+			g.drawLine(x1, y1, x2, y2);
+		}
+	}
+	private int getScaledX(int i){
+		//TODO needs to be scaled
+		return (int) (xCoord[i] + xOffset);
+	}
+	private int getScaledY(int i){
+		//TODO needs to be scaled
+		return (int) (yOffset - yCoord[i]);
 	}
 	private String getLabel(double scale){
 		//reformat the scale to fix rounding errors

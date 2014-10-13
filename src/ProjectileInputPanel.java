@@ -98,7 +98,6 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 		return verifyable;
 	}
 	//protected interface
-	//TODO write getters
 	protected double getXPostition() throws NumberFormatException{
 		return Double.parseDouble(xPositionField.getText());
 	}
