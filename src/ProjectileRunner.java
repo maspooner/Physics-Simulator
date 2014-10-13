@@ -52,8 +52,7 @@ public class ProjectileRunner {
 					projectileGraph.setYPosition(inputPanel.getYPosition());
 					projectileGraph.setXAccel(inputPanel.getXAccel());
 					projectileGraph.setYAccel(inputPanel.getYAccel());
-					projectileGraph.setVelocity(inputPanel.getVelocity());
-					projectileGraph.setAngle(inputPanel.getAngle());
+					projectileGraph.setLaunch(inputPanel.getVelocity(), inputPanel.getAngle());
 					projectileGraph.replot();
 				}
 				catch(NumberFormatException nfe){

@@ -214,13 +214,16 @@ public class ProjectileComponent extends JComponent{
 		}
 	}
 	//protected interface
-	//TODO write setters
 	protected void setXPosition(double xPosition){this.xPosition = xPosition;}
 	protected void setYPosition(double yPosition){this.yPosition = yPosition;}
 	protected void setXAccel(double xAccel){this.xAcceleration = xAccel;}
 	protected void setYAccel(double yAccel){this.yAcceleration = yAccel;}
-	protected void setVelocity(double velocity){this.initialVelocity = velocity;}
-	protected void setAngle(double angle){this.angle = angle;}
+	protected void setLaunch(double velocity, double angle){
+		this.initialVelocity = velocity;
+		this.angle = angle;
+		this.xVelocity = velocity * Math.cos(Math.toRadians(angle));
+		this.yVelocity = velocity * Math.sin(Math.toRadians(angle));
+	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
