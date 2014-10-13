@@ -19,9 +19,12 @@ public class ProjectileComponent extends JComponent{
 	private static final int NUM_POINTS=30;
 	private static final int X_LABEL_DISTANCE = 20; //px
 	private static final int Y_LABEL_DISTANCE = 30; //px
-	private static final int MAX_SCALE_DECIMAL_PLACES = 4;
 	private static final int X_LABEL_OFFSET = 15; //px
+	private static final int MAX_SCALE_DECIMAL_PLACES = 4;
 	private static final Font GRAPH_FONT = new Font("monospaced", Font.PLAIN, 11);
+	private static final int POINT_LENGTH = 1; //px
+	private static final int QUICK_DRAW = 80; //milliseconds
+	private static final boolean IS_QUICK_DRAW = true;
 	
 	//Members
 	//Point arrays
@@ -42,6 +45,9 @@ public class ProjectileComponent extends JComponent{
 	
 	private double xVelocity;
 	private double yVelocity;
+	private double time;
+	
+	private int drawIndex;
 	
 	//Constructors
 	protected ProjectileComponent(){
@@ -62,6 +68,9 @@ public class ProjectileComponent extends JComponent{
 		this.angle = 0.0;
 		this.xVelocity = 0.0;
 		this.yVelocity = 0.0;
+		this.time = 0;
+		//This means do not start in drawing mode
+		this.drawIndex = -1;
 	}
 	protected ProjectileComponent(double xScale, double yScale){
 		this(xScale, yScale, DEFAULT_OFFSET, DEFAULT_OFFSET);
@@ -134,17 +143,24 @@ public class ProjectileComponent extends JComponent{
 		Polygon p = new Polygon(xPoints, yPoints, 3);
 		g.fillPolygon(p);
 	}
-	private void plot(Graphics g){
-		double projectileTime = calculateTime();
-		double unitTime = calculatePointTime();
-		long startTime = System.currentTimeMillis();
+	private void plot(Graphics g, boolean isDrawing) throws InterruptedException{
+		//if in the process of drawing
+		if(isDrawing){
+			//Draw at the draw index
+			plotPointAtIndex(g);
+		}
+		else{
+			//Draw all points at once
+			plotPoints(g);
+		}
+	}
+	private void plotPoints(Graphics g){
 		//Draw all the points
 		for(int i = 0; i < NUM_POINTS; i++){
 			int pointX = getScaledX(i);
 			int pointY = getScaledY(i);
-			g.drawRect(pointX, pointY, 1, 1);
+			g.drawRect(pointX, pointY, POINT_LENGTH, POINT_LENGTH);
 		}
-		//TODO
 		//Draw line through multiple points to draw the graph
 		for(int i = 0; i < NUM_POINTS - 1; i++){
 			int x1 = getScaledX(i);
@@ -153,6 +169,31 @@ public class ProjectileComponent extends JComponent{
 			int y2 = getScaledY(i + 1);
 			g.drawLine(x1, y1, x2, y2);
 		}
+	}
+	private void plotPointAtIndex(Graphics g) throws InterruptedException{
+		//Draw 1 point
+		int x1 = getScaledX(drawIndex);
+		int y1 = getScaledY(drawIndex);
+		g.drawRect(x1, y1, POINT_LENGTH, POINT_LENGTH);
+		//Draw a connecting line to the point before (if not the first point)
+		if(drawIndex != 0){
+			int x2 = getScaledX(drawIndex - 1);
+			int y2 = getScaledY(drawIndex - 1);
+			g.drawLine(x1, y1, x2, y2);
+		}
+		//Wait to imitate real-time drawing (converts to millis)
+		long wait;
+		//quick draw speeds up long draws
+		if(IS_QUICK_DRAW){
+			wait = QUICK_DRAW;
+		}
+		else{
+			//actual timing
+			wait = (long) (calculatePointTime() * 1000);
+		}
+		Thread.sleep(wait);
+		//increment the draw index
+		drawIndex++;
 	}
 	private int getScaledX(int i){
 		//TODO needs to be scaled
@@ -204,7 +245,7 @@ public class ProjectileComponent extends JComponent{
 		return time;
 	}
 	private double calculatePointTime(){
-		double unitTime = calculateTime()/NUM_POINTS;
+		double unitTime = time/NUM_POINTS;
 		return unitTime;
 	}
 	private double calcPointX(double unitTime){
@@ -240,12 +281,30 @@ public class ProjectileComponent extends JComponent{
 	
 	@Override
 	protected void paintComponent(Graphics g) {
-		g.setFont(GRAPH_FONT);
-		drawAxis(g);
-		plot(g);
+		try{
+			g.setFont(GRAPH_FONT);
+			drawAxis(g);
+			boolean isDrawing = drawIndex != -1;
+			plot(g, isDrawing);
+		}
+		catch(InterruptedException ie){
+			//Should never happen
+			ie.printStackTrace();
+			System.exit(-1);
+		}
 	}
 	protected void replot(){
+		//find the new time
+		time = calculateTime();
+		//calculate the points
 		calcPoints(calculatePointTime());
-		repaint();
+		//Enter redraw mode
+		drawIndex = 0;
+		//for all the points
+		while(drawIndex < NUM_POINTS){
+			repaint();
+		}
+		//Exit redraw mode
+		drawIndex = -1;
 	}
 }

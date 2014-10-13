@@ -9,8 +9,7 @@ public class ProjectileRunner {
 	 * TODO:
 	 * What needs to be done:
 	 * draw the arrowheads
-	 * draw the actual graph
-	 * optimise drawing to not calculate all the math each time repaint is called
+	 * gridlines
 	 */
 	//members
 	private static Object lock;
@@ -28,7 +27,7 @@ public class ProjectileRunner {
 	private static void setupFrame(){
 		JFrame frame = new JFrame("Projectile Physics");
 		inputPanel = new ProjectileInputPanel(lock);
-		projectileGraph = new ProjectileComponent(10, 10);
+		projectileGraph = new ProjectileComponent(0.5, 0.5, 10, 10);
 		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, inputPanel, projectileGraph);
 		split.setContinuousLayout(false);
 		frame.add(split);
@@ -52,6 +51,8 @@ public class ProjectileRunner {
 					projectileGraph.setYAccel(inputPanel.getYAccel());
 					projectileGraph.setLaunch(inputPanel.getVelocity(), inputPanel.getAngle());
 					projectileGraph.replot();
+					//turn on input button again
+					inputPanel.switchMode(true);
 				}
 				catch(NumberFormatException nfe){
 					//should never be called, as fields are verified before thread is notified

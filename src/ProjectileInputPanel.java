@@ -116,6 +116,11 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 	protected double getAngle() throws NumberFormatException{
 		return Double.parseDouble(angleField.getText());
 	}
+	protected void switchMode(boolean isEnabled){
+		//lets the user know what is happening
+		plotButton.setText(isEnabled ? "Plot!" : "Graphing...");
+		plotButton.setEnabled(isEnabled);
+	}
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		//on click, only if fields are in correct format
@@ -124,6 +129,8 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 			synchronized(lock){
 				lock.notify();
 			}
+			//disable the button
+			switchMode(false);
 		}
 		else{
 			//show error message
