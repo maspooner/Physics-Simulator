@@ -97,7 +97,11 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 		verifyable &= verifyDoubleField(angleField);
 		return verifyable;
 	}
-	//protected interface TODO write getters
+	//protected interface
+	//TODO write getters
+	protected double getXPostition() throws NumberFormatException{
+		return Double.parseDouble(xPositionField.getText());
+	}
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		//on click, only if fields are in correct format

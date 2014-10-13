@@ -11,7 +11,6 @@ public class ProjectileRunner {
 	 * draw the arrowheads
 	 * draw the actual graph
 	 * optimise drawing to not calculate all the math each time repaint is called
-	 * add input panel (started)
 	 */
 	//members
 	private static Object lock;
@@ -29,7 +28,7 @@ public class ProjectileRunner {
 	private static void setupFrame(){
 		JFrame frame = new JFrame("Projectile Physics");
 		inputPanel = new ProjectileInputPanel(lock);
-		projectileGraph = new ProjectileComponent(10, 10, 55, 55);
+		projectileGraph = new ProjectileComponent(10, 10);
 		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, inputPanel, projectileGraph);
 		split.setContinuousLayout(false);
 		frame.add(split);
@@ -47,7 +46,17 @@ public class ProjectileRunner {
 				}
 				System.out.println("NOTIFIED!");
 				//set and graph the new parameters
-				//TODO use setters in projectilecomponent with getters in projectileinputpanel
+				try{
+					//TODO use setters in projectilecomponent with getters in projectileinputpanel
+					projectileGraph.setXPosition(inputPanel.getXPostition());
+					
+					projectileGraph.replot();
+				}
+				catch(NumberFormatException nfe){
+					//should never be called, as fields are verified before thread is notified
+					nfe.printStackTrace();
+					System.exit(-1);
+				}
 			}
 		}
 		catch(InterruptedException ie){

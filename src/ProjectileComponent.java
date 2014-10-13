@@ -11,7 +11,7 @@ import javax.swing.JComponent;
 public class ProjectileComponent extends JComponent{
 	//Graph Constants
 	private static final int DEFAULT_SCALE = 2; //m
-	private static final int DEFAULT_OFFSET = 25; //px
+	private static final int DEFAULT_OFFSET = 35; //px
 	private static final int TICK_LENGTH = 10; //px
 	private static final int TICK_SPACING = 45; //px
 	private static final int ARROW_LENGTH = 25; //px
@@ -50,8 +50,9 @@ public class ProjectileComponent extends JComponent{
 	protected ProjectileComponent(double xScale, double yScale, int xOffset, int yOffset){
 		this.xScale = xScale;
 		this.yScale = yScale;
-		this.xOffset = xOffset;
-		this.yOffset = yOffset;
+		//minimum offset is default offset
+		this.xOffset = xOffset + DEFAULT_OFFSET;
+		this.yOffset = yOffset + DEFAULT_OFFSET;
 		//set all physics fields to 0 to start (will not graph until button on input panel is pressed)
 		this.xPosition = 0.0;
 		this.yPosition = 0.0;
@@ -134,16 +135,15 @@ public class ProjectileComponent extends JComponent{
 		g.fillPolygon(p);
 	}
 	private void plot(Graphics g){
-		/*double projectileTime = calculateTime();
+		double projectileTime = calculateTime();
 		double unitTime = calculatePointTime();
 		long startTime = System.currentTimeMillis();
-		*/
-		//TODO Matt please check this code, will not run! throws exception!!!1!
-		/*for(int i = 1; i <= (NUM_POINTS); i++){
+		
+		for(int i = 0; i < NUM_POINTS; i++){
 			int pointX = (int) (xCoord[i] + xOffset);
 			int pointY = (int) (yOffset - yCoord[i]);
 			g.drawRect(pointX, pointY, 1, 1);
-		}*/
+		}
 		
 		//TODO
 		//Draw all the points
@@ -163,13 +163,6 @@ public class ProjectileComponent extends JComponent{
 			label = label.substring(1);
 		}
 		return label;
-	}
-	private void calculatePoints() {
-		//TODO only do calculation once, not everytime paint is called
-		//calculate the time for the projectile to hit the ground
-		//divide that by the NUM_POINTS to get the time between each point
-		//Iterate through each time and find the x and y position at it
-		//set it to an instance variable to be graphed later
 	}
 	//TODO this (just plot points), use range equation, get final distance, divide by number of points, and then add interval from that to initial, then repeat for number of points. 
 	/**
@@ -213,7 +206,7 @@ public class ProjectileComponent extends JComponent{
 	private void calcPoints(double unitTime){
 		double jumpTime = unitTime;
 		double incrementTime = unitTime;
-		for(int i = 0; i <= NUM_POINTS; i++){
+		for(int i = 0; i < NUM_POINTS; i++){
 			double thisXCoord = calcPointX(jumpTime);
 			double thisYCoord = calcPointY(jumpTime);
 			xCoord[i] = thisXCoord;
@@ -221,7 +214,9 @@ public class ProjectileComponent extends JComponent{
 			jumpTime = jumpTime + incrementTime;
 		}
 	}
-	//protected interface TODO write setters
+	//protected interface
+	//TODO write setters
+	protected void setXPosition(double xPosition){this.xPosition = xPosition;}
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.setFont(GRAPH_FONT);
@@ -229,7 +224,7 @@ public class ProjectileComponent extends JComponent{
 		plot(g);
 	}
 	protected void replot(){
-		calculatePoints();
+		calcPoints(calculatePointTime());
 		repaint();
 	}
 }
