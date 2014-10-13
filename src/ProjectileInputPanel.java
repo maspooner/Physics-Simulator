@@ -102,6 +102,21 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 	protected double getXPostition() throws NumberFormatException{
 		return Double.parseDouble(xPositionField.getText());
 	}
+	protected double getYPosition() throws NumberFormatException{
+		return Double.parseDouble(yPositionField.getText());
+	}
+	protected double getXAccel() throws NumberFormatException{
+		return Double.parseDouble(xAccelerationField.getText());
+	}
+	protected double getYAccel() throws NumberFormatException{
+		return Double.parseDouble(yAccelerationField.getText());
+	}
+	protected double getVelocity() throws NumberFormatException{
+		return Double.parseDouble(velocityField.getText());
+	}
+	protected double getAngle() throws NumberFormatException{
+		return Double.parseDouble(angleField.getText());
+	}
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		//on click, only if fields are in correct format

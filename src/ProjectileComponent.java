@@ -202,7 +202,6 @@ public class ProjectileComponent extends JComponent{
 		double pointY = yPosition + (yVelocity)*(unitTime) + (.5)*(yAcceleration)*(Math.pow(unitTime, 2));
 		return pointY;
 	}
-	@SuppressWarnings("unused")
 	private void calcPoints(double unitTime){
 		double jumpTime = unitTime;
 		double incrementTime = unitTime;
@@ -217,6 +216,12 @@ public class ProjectileComponent extends JComponent{
 	//protected interface
 	//TODO write setters
 	protected void setXPosition(double xPosition){this.xPosition = xPosition;}
+	protected void setYPosition(double yPosition){this.yPosition = yPosition;}
+	protected void setXAccel(double xAccel){this.xAcceleration = xAccel;}
+	protected void setYAccel(double yAccel){this.yAcceleration = yAccel;}
+	protected void setVelocity(double velocity){this.initialVelocity = velocity;}
+	protected void setAngle(double angle){this.angle = angle;}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.setFont(GRAPH_FONT);

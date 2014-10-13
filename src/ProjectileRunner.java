@@ -49,7 +49,11 @@ public class ProjectileRunner {
 				try{
 					//TODO use setters in projectilecomponent with getters in projectileinputpanel
 					projectileGraph.setXPosition(inputPanel.getXPostition());
-					
+					projectileGraph.setYPosition(inputPanel.getYPosition());
+					projectileGraph.setXAccel(inputPanel.getXAccel());
+					projectileGraph.setYAccel(inputPanel.getYAccel());
+					projectileGraph.setVelocity(inputPanel.getVelocity());
+					projectileGraph.setAngle(inputPanel.getAngle());
 					projectileGraph.replot();
 				}
 				catch(NumberFormatException nfe){
