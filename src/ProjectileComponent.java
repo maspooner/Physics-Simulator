@@ -134,9 +134,17 @@ public class ProjectileComponent extends JComponent{
 		g.fillPolygon(p);
 	}
 	private void plot(Graphics g){
-		long startTime = System.currentTimeMillis();
-		double projectileTime = calculateTime();
+		/*double projectileTime = calculateTime();
 		double unitTime = calculatePointTime();
+		long startTime = System.currentTimeMillis();
+		*/
+		//TODO Matt please check this code, will not run! throws exception!!!1!
+		/*for(int i = 1; i <= (NUM_POINTS); i++){
+			int pointX = (int) (xCoord[i] + xOffset);
+			int pointY = (int) (yOffset - yCoord[i]);
+			g.drawRect(pointX, pointY, 1, 1);
+		}*/
+		
 		//TODO
 		//Draw all the points
 		//Draw and arc or line through multiple points to draw the graph
@@ -201,14 +209,16 @@ public class ProjectileComponent extends JComponent{
 		double pointY = yPosition + (yVelocity)*(unitTime) + (.5)*(yAcceleration)*(Math.pow(unitTime, 2));
 		return pointY;
 	}
+	@SuppressWarnings("unused")
 	private void calcPoints(double unitTime){
 		double jumpTime = unitTime;
+		double incrementTime = unitTime;
 		for(int i = 0; i <= NUM_POINTS; i++){
 			double thisXCoord = calcPointX(jumpTime);
 			double thisYCoord = calcPointY(jumpTime);
 			xCoord[i] = thisXCoord;
 			yCoord[i] = thisYCoord;
-			jumpTime = jumpTime + jumpTime;
+			jumpTime = jumpTime + incrementTime;
 		}
 	}
 	//protected interface TODO write setters
