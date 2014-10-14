@@ -27,7 +27,7 @@ public class ProjectileRunner {
 	private static void setupFrame(){
 		JFrame frame = new JFrame("Projectile Physics");
 		inputPanel = new ProjectileInputPanel(lock);
-		projectileGraph = new ProjectileComponent(0.5, 0.5, 10, 10);
+		projectileGraph = new ProjectileComponent(1, 1, 10, 10);
 		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, inputPanel, projectileGraph);
 		split.setContinuousLayout(false);
 		frame.add(split);

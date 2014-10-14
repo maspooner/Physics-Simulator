@@ -16,15 +16,15 @@ public class ProjectileComponent extends JComponent{
 	private static final int TICK_SPACING = 45; //px
 	private static final int ARROW_LENGTH = 25; //px
 	private static final int ARROW_WIDTH = 10; //px
-	private static final int NUM_POINTS=30;
+	private static final int NUM_POINTS=50;
 	private static final int X_LABEL_DISTANCE = 20; //px
 	private static final int Y_LABEL_DISTANCE = 30; //px
 	private static final int X_LABEL_OFFSET = 15; //px
 	private static final int MAX_SCALE_DECIMAL_PLACES = 4;
 	private static final Font GRAPH_FONT = new Font("monospaced", Font.PLAIN, 11);
 	private static final int POINT_LENGTH = 1; //px
-	private static final int QUICK_DRAW = 80; //milliseconds
-	private static final boolean IS_QUICK_DRAW = true;
+	private static final int CONSTANT_DRAW = 80; //milliseconds
+	private static final boolean IS_CONSTANT_DRAW = false;
 	
 	//Members
 	//Point arrays
@@ -171,6 +171,8 @@ public class ProjectileComponent extends JComponent{
 		}
 	}
 	private void plotPointAtIndex(Graphics g) throws InterruptedException{
+		//just in case repaint is called by the AWT thread during this process
+		if(drawIndex >= NUM_POINTS) return;
 		//Draw 1 point
 		int x1 = getScaledX(drawIndex);
 		int y1 = getScaledY(drawIndex);
@@ -184,8 +186,8 @@ public class ProjectileComponent extends JComponent{
 		//Wait to imitate real-time drawing (converts to millis)
 		long wait;
 		//quick draw speeds up long draws
-		if(IS_QUICK_DRAW){
-			wait = QUICK_DRAW;
+		if(IS_CONSTANT_DRAW){
+			wait = CONSTANT_DRAW;
 		}
 		else{
 			//actual timing
@@ -196,12 +198,12 @@ public class ProjectileComponent extends JComponent{
 		drawIndex++;
 	}
 	private int getScaledX(int i){
-		//TODO needs to be scaled
-		return (int) (xCoord[i] + xOffset);
+		double scaledX = ((xCoord[i] / xScale) * TICK_SPACING) + yOffset;
+		return (int) scaledX;
 	}
 	private int getScaledY(int i){
-		//TODO needs to be scaled
-		return (int) (yOffset - yCoord[i]);
+		double scaledY = getHeight() - xOffset - ((yCoord[i] / yScale) * TICK_SPACING);
+		return (int) scaledY;
 	}
 	private String getLabel(double scale){
 		//reformat the scale to fix rounding errors
@@ -218,22 +220,6 @@ public class ProjectileComponent extends JComponent{
 		}
 		return label;
 	}
-	//TODO this (just plot points), use range equation, get final distance, divide by number of points, and then add interval from that to initial, then repeat for number of points. 
-	/**
-	 * @return returns a double
-	 * TODO compensate for displacement on computer graph
-	 * Matt - instead of compensating, since we will need the raw value for the time calculation, I added a parameter, so that it returns either a scaled range or the pure range. 
-	 */
-	private double calculateRange(boolean isScaled){
-		double rawRange = ((Math.pow(initialVelocity, 2))*(Math.sin(Math.toRadians(2*angle))))/yAcceleration; //dat range equation
-		double manipRange = 0; //add compensate code here
-		if(isScaled){
-			return rawRange;
-		}
-		else{ //TODO create manipRange for graph
-			return manipRange;
-		}
-	}
 	/**
 	 * @param None!
 	 * @return The time at which a projectile is in the air. (untested)
@@ -245,7 +231,7 @@ public class ProjectileComponent extends JComponent{
 		return time;
 	}
 	private double calculatePointTime(){
-		double unitTime = time/NUM_POINTS;
+		double unitTime = time/(NUM_POINTS-1);
 		return unitTime;
 	}
 	private double calcPointX(double unitTime){
@@ -257,7 +243,7 @@ public class ProjectileComponent extends JComponent{
 		return pointY;
 	}
 	private void calcPoints(double unitTime){
-		double jumpTime = unitTime;
+		double jumpTime = 0;
 		double incrementTime = unitTime;
 		for(int i = 0; i < NUM_POINTS; i++){
 			double thisXCoord = calcPointX(jumpTime);
