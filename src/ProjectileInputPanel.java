@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -18,6 +19,8 @@ import javax.swing.border.TitledBorder;
 public class ProjectileInputPanel extends JPanel implements ActionListener{
 	//members
 	//Physics Constants (defaults)
+	private static final int DEFAULT_SCALE = 2; //m
+	private static final boolean IS_CONSTANT_DRAW = false;
 	private static final double X_POSITION_INITIAL = 0; //m
 	private static final double Y_POSITION_INITIAL = 0; //m
 	private static final double VELOCITY_INITIAL = 15.0; //m/s
@@ -34,13 +37,16 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 	private JTextField yAccelerationField;
 	private JTextField velocityField;
 	private JTextField angleField;
+	private JTextField xScaleField;
+	private JTextField yScaleField;
+	private JCheckBox realisticBox;
 	private JButton plotButton;
 	//constructor
 	protected ProjectileInputPanel(Object lock){
 		//will notify the thread waiting on the lock on button click
 		this.lock = lock;
-		//2 rows, 4 cols, 5px spacing
-		setLayout(new GridLayout(2, 4, 5, 5));
+		//2 rows, 5 cols, 5px spacing
+		setLayout(new GridLayout(2, 5, 5, 5));
 		xPositionField = createField("xPos");
 		xPositionField.setText(Double.toString(X_POSITION_INITIAL));
 		yPositionField = createField("yPos");
@@ -53,6 +59,12 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 		velocityField.setText(Double.toString(VELOCITY_INITIAL));
 		angleField = createField("angle(deg)");
 		angleField.setText(Double.toString(LAUNCH_ANGLE));
+		xScaleField = createField("xScale");
+		xScaleField.setText(Double.toString(DEFAULT_SCALE));
+		yScaleField = createField("yScale");
+		yScaleField.setText(Double.toString(DEFAULT_SCALE));
+		realisticBox = new JCheckBox("Is Realistic Time");
+		realisticBox.setSelected(IS_CONSTANT_DRAW);
 		plotButton = new JButton("Plot!");
 		plotButton.addActionListener(this);
 		
@@ -62,6 +74,9 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 		add(yAccelerationField);
 		add(velocityField);
 		add(angleField);
+		add(xScaleField);
+		add(yScaleField);
+		add(realisticBox);
 		add(plotButton);
 	}
 	//methods
@@ -95,6 +110,19 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 		verifyable &= verifyDoubleField(yAccelerationField);
 		verifyable &= verifyDoubleField(velocityField);
 		verifyable &= verifyDoubleField(angleField);
+		verifyable &= verifyDoubleField(xScaleField);
+		verifyable &= verifyDoubleField(yScaleField);
+		//make sure scale is reasonable
+		if(verifyable){
+			if(getXScale() <= 0){
+				verifyable = false;
+				xScaleField.setText(EMPTY);
+			}
+			if(getYScale() <= 0){
+				verifyable = false;
+				yScaleField.setText(EMPTY);
+			}
+		}
 		return verifyable;
 	}
 	//protected interface
@@ -115,6 +143,15 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 	}
 	protected double getAngle() throws NumberFormatException{
 		return Double.parseDouble(angleField.getText());
+	}
+	protected double getXScale() throws NumberFormatException{
+		return Double.parseDouble(xScaleField.getText());
+	}
+	protected double getYScale() throws NumberFormatException{
+		return Double.parseDouble(yScaleField.getText());
+	}
+	protected boolean isRealistic(){
+		return realisticBox.isSelected();
 	}
 	protected void switchMode(boolean isEnabled){
 		//lets the user know what is happening

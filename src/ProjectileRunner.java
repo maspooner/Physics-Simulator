@@ -9,7 +9,6 @@ public class ProjectileRunner {
 	 * TODO:
 	 * What needs to be done:
 	 * draw the arrowheads
-	 * gridlines
 	 */
 	//members
 	private static Object lock;
@@ -27,7 +26,7 @@ public class ProjectileRunner {
 	private static void setupFrame(){
 		JFrame frame = new JFrame("Projectile Physics");
 		inputPanel = new ProjectileInputPanel(lock);
-		projectileGraph = new ProjectileComponent(1, 1, 10, 10);
+		projectileGraph = new ProjectileComponent(10, 10);
 		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, inputPanel, projectileGraph);
 		split.setContinuousLayout(false);
 		frame.add(split);
@@ -45,6 +44,10 @@ public class ProjectileRunner {
 				}
 				//set and graph the new parameters
 				try{
+					//constant draw means NOT realistic
+					projectileGraph.setConstantDraw(!inputPanel.isRealistic());
+					projectileGraph.setXScale(inputPanel.getXScale());
+					projectileGraph.setYScale(inputPanel.getYScale());
 					projectileGraph.setXPosition(inputPanel.getXPostition());
 					projectileGraph.setYPosition(inputPanel.getYPosition());
 					projectileGraph.setXAccel(inputPanel.getXAccel());

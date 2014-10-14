@@ -10,7 +10,6 @@ import javax.swing.JComponent;
 @SuppressWarnings("serial")
 public class ProjectileComponent extends JComponent{
 	//Graph Constants
-	private static final int DEFAULT_SCALE = 2; //m
 	private static final int DEFAULT_OFFSET = 35; //px
 	private static final int TICK_LENGTH = 10; //px
 	private static final int TICK_SPACING = 45; //px
@@ -23,8 +22,7 @@ public class ProjectileComponent extends JComponent{
 	private static final int MAX_SCALE_DECIMAL_PLACES = 4;
 	private static final Font GRAPH_FONT = new Font("monospaced", Font.PLAIN, 11);
 	private static final int POINT_LENGTH = 1; //px
-	private static final int CONSTANT_DRAW = 80; //milliseconds
-	private static final boolean IS_CONSTANT_DRAW = false;
+	private static final int CONSTANT_DRAW = 60; //milliseconds
 	
 	//Members
 	//Point arrays
@@ -34,14 +32,13 @@ public class ProjectileComponent extends JComponent{
 	//Physics
 	private double xScale;
 	private double yScale;
+	private boolean constantDraw;
 	private int xOffset;
 	private int yOffset;
 	private double xPosition;
 	private double yPosition;
 	private double xAcceleration;
 	private double yAcceleration;
-	private double initialVelocity;
-	private double angle;
 	
 	private double xVelocity;
 	private double yVelocity;
@@ -51,11 +48,9 @@ public class ProjectileComponent extends JComponent{
 	
 	//Constructors
 	protected ProjectileComponent(){
-		this(DEFAULT_SCALE, DEFAULT_SCALE);
+		this(DEFAULT_OFFSET, DEFAULT_OFFSET);
 	}
-	protected ProjectileComponent(double xScale, double yScale, int xOffset, int yOffset){
-		this.xScale = xScale;
-		this.yScale = yScale;
+	protected ProjectileComponent(int xOffset, int yOffset){
 		//minimum offset is default offset
 		this.xOffset = xOffset + DEFAULT_OFFSET;
 		this.yOffset = yOffset + DEFAULT_OFFSET;
@@ -64,19 +59,15 @@ public class ProjectileComponent extends JComponent{
 		this.yPosition = 0.0;
 		this.xAcceleration = 0.0;
 		this.yAcceleration = 0.0;
-		this.initialVelocity = 0.0;
-		this.angle = 0.0;
 		this.xVelocity = 0.0;
 		this.yVelocity = 0.0;
 		this.time = 0;
+		//scale fields also tbd until later
+		this.xScale = 0.0;
+		this.yScale = 0.0;
+		this.constantDraw = false;
 		//This means do not start in drawing mode
 		this.drawIndex = -1;
-	}
-	protected ProjectileComponent(double xScale, double yScale){
-		this(xScale, yScale, DEFAULT_OFFSET, DEFAULT_OFFSET);
-	}
-	protected ProjectileComponent(int xOffset, int yOffset){
-		this(DEFAULT_SCALE, DEFAULT_SCALE, xOffset, yOffset);
 	}
 	//Methods
 	//private interface
@@ -102,17 +93,20 @@ public class ProjectileComponent extends JComponent{
 		drawArrow(g, false);
 		//draw the y arrow
 		drawArrow(g, true);
-		//draw the x labels
-		for(int x = xOffset; x < OFF_WIDTH; x += TICK_SPACING){
-			int scaleMark = (x - xOffset) / TICK_SPACING;
-			String label = getLabel(scaleMark * xScale);
-			g.drawString(label, x - X_LABEL_OFFSET, OFF_HEIGHT + X_LABEL_DISTANCE);
-		}
-		//draw the y labels
-		for(int y = OFF_HEIGHT; y > ARROW_LENGTH; y -= TICK_SPACING){
-			int scaleMark = (OFF_HEIGHT - y) / TICK_SPACING;
-			String label = getLabel(scaleMark * yScale);
-			g.drawString(label, xOffset - Y_LABEL_DISTANCE, y);
+		//only draw labels if scale given
+		if(xScale > 0 && yScale > 0){
+			//draw the x labels
+			for(int x = xOffset; x < OFF_WIDTH; x += TICK_SPACING){
+				int scaleMark = (x - xOffset) / TICK_SPACING;
+				String label = getLabel(scaleMark * xScale);
+				g.drawString(label, x - X_LABEL_OFFSET, OFF_HEIGHT + X_LABEL_DISTANCE);
+			}
+			//draw the y labels
+			for(int y = OFF_HEIGHT; y > ARROW_LENGTH; y -= TICK_SPACING){
+				int scaleMark = (OFF_HEIGHT - y) / TICK_SPACING;
+				String label = getLabel(scaleMark * yScale);
+				g.drawString(label, xOffset - Y_LABEL_DISTANCE, y);
+			}
 		}
 	}
 	private void drawArrow(Graphics g, boolean isUp){
@@ -186,7 +180,7 @@ public class ProjectileComponent extends JComponent{
 		//Wait to imitate real-time drawing (converts to millis)
 		long wait;
 		//quick draw speeds up long draws
-		if(IS_CONSTANT_DRAW){
+		if(constantDraw){
 			wait = CONSTANT_DRAW;
 		}
 		else{
@@ -221,7 +215,6 @@ public class ProjectileComponent extends JComponent{
 		return label;
 	}
 	/**
-	 * @param None!
 	 * @return The time at which a projectile is in the air. (untested)
 	 */
 	private double calculateTime(){ 
@@ -254,17 +247,17 @@ public class ProjectileComponent extends JComponent{
 		}
 	}
 	//protected interface
+	protected void setConstantDraw(boolean constantDraw){this.constantDraw = constantDraw;}
+	protected void setXScale(double xScale){this.xScale = xScale;}
+	protected void setYScale(double yScale){this.yScale = yScale;}
 	protected void setXPosition(double xPosition){this.xPosition = xPosition;}
 	protected void setYPosition(double yPosition){this.yPosition = yPosition;}
 	protected void setXAccel(double xAccel){this.xAcceleration = xAccel;}
 	protected void setYAccel(double yAccel){this.yAcceleration = yAccel;}
 	protected void setLaunch(double velocity, double angle){
-		this.initialVelocity = velocity;
-		this.angle = angle;
 		this.xVelocity = velocity * Math.cos(Math.toRadians(angle));
 		this.yVelocity = velocity * Math.sin(Math.toRadians(angle));
 	}
-	
 	@Override
 	protected void paintComponent(Graphics g) {
 		try{
