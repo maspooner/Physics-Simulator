@@ -22,12 +22,12 @@ public class ProjectileComponent extends JComponent{
 	private static final int MAX_SCALE_DECIMAL_PLACES = 4;
 	private static final Font GRAPH_FONT = new Font("monospaced", Font.PLAIN, 11);
 	private static final int POINT_LENGTH = 1; //px
-	private static final int CONSTANT_DRAW = 60; //milliseconds
+	private static final int CONSTANT_DRAW = 50; //milliseconds
 	
 	//Members
 	//Point arrays
-	private double[] xCoord = new double[NUM_POINTS];
-	private double[] yCoord = new double[NUM_POINTS];
+	private double[] xCoords;
+	private double[] yCoords;
 	
 	//Physics
 	private double xScale;
@@ -51,6 +51,8 @@ public class ProjectileComponent extends JComponent{
 		this(DEFAULT_OFFSET, DEFAULT_OFFSET);
 	}
 	protected ProjectileComponent(int xOffset, int yOffset){
+		this.xCoords = new double[NUM_POINTS];
+		this.yCoords = new double[NUM_POINTS];
 		//minimum offset is default offset
 		this.xOffset = xOffset + DEFAULT_OFFSET;
 		this.yOffset = yOffset + DEFAULT_OFFSET;
@@ -194,11 +196,11 @@ public class ProjectileComponent extends JComponent{
 		drawIndex++;
 	}
 	private int getScaledX(int i){
-		double scaledX = ((xCoord[i] / xScale) * TICK_SPACING) + yOffset;
+		double scaledX = ((xCoords[i] / xScale) * TICK_SPACING) + yOffset;
 		return (int) scaledX;
 	}
 	private int getScaledY(int i){
-		double scaledY = getHeight() - xOffset - ((yCoord[i] / yScale) * TICK_SPACING);
+		double scaledY = getHeight() - xOffset - ((yCoords[i] / yScale) * TICK_SPACING);
 		return (int) scaledY;
 	}
 	private String getLabel(double scale){
@@ -243,8 +245,8 @@ public class ProjectileComponent extends JComponent{
 		for(int i = 0; i < NUM_POINTS; i++){
 			double thisXCoord = calcPointX(jumpTime);
 			double thisYCoord = calcPointY(jumpTime);
-			xCoord[i] = thisXCoord;
-			yCoord[i] = thisYCoord;
+			xCoords[i] = thisXCoord;
+			yCoords[i] = thisYCoord;
 			jumpTime = jumpTime + incrementTime;
 		}
 	}

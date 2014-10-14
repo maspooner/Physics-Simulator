@@ -72,11 +72,14 @@ public class ProjectileInputPanel extends JPanel implements ActionListener{
 		add(yPositionField);
 		add(xAccelerationField);
 		add(yAccelerationField);
+		
+		add(realisticBox);
+		
 		add(velocityField);
 		add(angleField);
 		add(xScaleField);
 		add(yScaleField);
-		add(realisticBox);
+		
 		add(plotButton);
 	}
 	//methods
