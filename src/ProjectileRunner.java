@@ -1,3 +1,5 @@
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
@@ -11,6 +13,8 @@ public class ProjectileRunner {
 	 * draw the arrowheads
 	 */
 	//members
+	private static final Dimension FRAME_SIZE = new Dimension(500, 400);
+	
 	private static Object lock;
 	private static ProjectileInputPanel inputPanel;
 	private static ProjectileComponent projectileGraph;
@@ -31,7 +35,7 @@ public class ProjectileRunner {
 		split.setContinuousLayout(false);
 		frame.add(split);
 		
-		frame.setSize(500, 400);
+		frame.setMinimumSize(FRAME_SIZE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}

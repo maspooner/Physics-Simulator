@@ -108,6 +108,8 @@ public class ProjectileComponent extends JComponent{
 				g.drawString(label, xOffset - Y_LABEL_DISTANCE, y);
 			}
 		}
+		//draw the creator's names :D
+		g.drawString("Created by: Matt Spooner & Derek Wider", getWidth() - 280, getHeight() - 10);
 	}
 	private void drawArrow(Graphics g, boolean isUp){
 		int[] xPoints = new int[3];
