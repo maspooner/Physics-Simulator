@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
 /**
+ * Projectile Physics
  * @author Matt Spooner and Derek Wider
  */
 public class ProjectileRunner {

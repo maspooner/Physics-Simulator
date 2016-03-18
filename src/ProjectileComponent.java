@@ -127,15 +127,16 @@ public class ProjectileComponent extends JComponent{
 			xPoints[2] = xOffset;
 			yPoints[2] = 0;
 		}
-		else{ //work in progress FOR DEREK ONLY
-			/*xPoints[0] = getWidth();
-			yPoints[0] = getHeight() - 20;
-			
-			xPoints[1] = getWidth() - xOffset;
-			yPoints[1] = getHeight() - yOffset/2;
-			
-			xPoints[2] = getWidth() - xOffset;
-			yPoints[2] = getHeight() + yOffset/2;*/
+		else{
+			//right point
+			xPoints[0] = getWidth();
+			yPoints[0] = getHeight() - xOffset;
+			//top point
+			xPoints[1] = getWidth() - ARROW_LENGTH;
+			yPoints[1] = getHeight() - xOffset - ARROW_WIDTH/2;
+			//bottom point
+			xPoints[2] = getWidth() - ARROW_LENGTH;
+			yPoints[2] = getHeight() - xOffset + ARROW_WIDTH/2;
 		}
 		//create the triangle
 		Polygon p = new Polygon(xPoints, yPoints, 3);
